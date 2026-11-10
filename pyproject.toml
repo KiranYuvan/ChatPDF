@@ -11,7 +11,7 @@ readme = "README.md"
 requires-python = ">=3.11,<3.13"
 
 [tool.setuptools]
-packages = ["app"]
+packages = ["app", "api"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
