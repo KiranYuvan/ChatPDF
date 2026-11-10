@@ -7,6 +7,8 @@ Upload a PDF, ask questions in plain English, and get answers **grounded in the 
 ![Lint](https://img.shields.io/badge/lint-ruff-purple)
 ![Cost](https://img.shields.io/badge/cost-%240-brightgreen)
 
+**🚀 Live demo: [kiranchatpdf.streamlit.app](https://kiranchatpdf.streamlit.app/)**. Hosted free on Streamlit Community Cloud and auto-deployed from the CI-gated `release` branch. Please upload only non-sensitive PDFs: the demo index is shared by all visitors and reset when the app restarts.
+
 <!-- Add a screenshot: run the app, capture the chat view, save as docs/screenshot.png, then uncomment:
 ![ChatPDF screenshot](docs/screenshot.png)
 -->
