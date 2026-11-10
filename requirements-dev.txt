@@ -3,5 +3,5 @@
 
 pytest==9.2.0
 httpx==0.28.1    # FastAPI TestClient (like WebApplicationFactory in ASP.NET Core tests)
-ruff==0.14.4
+ruff==0.17.4
 fpdf2==2.9.0     # builds PDFs for tests and the sample handbook
