@@ -1,0 +1,4 @@
+# Store text files with LF in the repo; Git converts per-OS on checkout. Avoids CRLF noise in diffs.
+* text=auto eol=lf
+*.pdf binary
+*.png binary

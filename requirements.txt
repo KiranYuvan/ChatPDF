@@ -1,0 +1,22 @@
+# Runtime dependencies - pinned for reproducible installs (like exact <PackageReference Version>).
+# Python 3.11 or 3.12. Dev/test tools live in requirements-dev.txt.
+
+pydantic==2.14.3
+pydantic-settings==2.16.2
+
+# PDF parsing + chunking
+pypdf==7.0.1
+langchain-text-splitters==1.1.3
+
+# Embeddings + vector DB (torch is the big one: ~200 MB CPU wheel on Windows)
+torch==2.15.0
+sentence-transformers==6.2.0
+transformers==5.22.2
+chromadb==1.5.9
+
+# LLM clients
+ollama==0.6.3
+groq==1.7.0
+
+# UI
+streamlit==1.67.0
