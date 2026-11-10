@@ -3,6 +3,7 @@
 # To restrict a local run to this machine:  streamlit run streamlit_app.py --server.address localhost
 [server]
 headless = true
+maxUploadSize = 20   # MB; keep in sync with CHATPDF_MAX_UPLOAD_MB (enforced again server-side)
 
 [browser]
 gatherUsageStats = false

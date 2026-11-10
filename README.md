@@ -131,7 +131,7 @@ python -m scripts.demo path/to/your.pdf
 ### Run tests and lint
 
 ```bash
-pytest                    # 17 tests: config, loader, chunker, vector store, RAG service
+pytest                    # 23 tests: config, loader, chunker, vector store, RAG service
 pytest -m "not integration"   # fast unit tests only (no embedding model)
 ruff check . && ruff format --check .
 ```
@@ -148,6 +148,8 @@ All settings live in [`app/config.py`](app/config.py) and can be overridden with
 | `CHATPDF_EMBEDDING_MODEL` | `sentence-transformers/all-MiniLM-L6-v2` | Must stay the same between indexing and querying |
 | `CHATPDF_TOP_K` | 4 | Chunks retrieved per question |
 | `CHATPDF_LLM_PROVIDER` | `auto` | `auto`, `ollama`, `groq` or `huggingface` |
+| `CHATPDF_MAX_UPLOAD_MB` | 20 | Upload limit, enforced on the server |
+| `CHATPDF_LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING` or `ERROR` |
 | `GROQ_API_KEY` | none | Secret: environment variable or local `.env` only, never committed |
 
 Secrets have no defaults, are typed as `SecretStr` (masked in logs), and `.env` is git-ignored.
@@ -158,6 +160,9 @@ Secrets have no defaults, are typed as `SecretStr` (masked in logs), and `.env` 
 - **150-character overlap.** A fact that straddles a chunk boundary still appears whole in one chunk.
 - **Top-k of 4.** Enough context to contain the answer without drowning a small model in irrelevant text.
 - **Deterministic chunk IDs plus delete-before-upsert.** Re-uploading a PDF replaces its chunks and never duplicates them.
+- **Per-session namespaces.** Every query filters on a namespace (like a `TenantId` column), so visitors to the shared demo only see and search their own uploads.
+- **Defensive input handling.** Size limit, file names stripped to their base name, and friendly errors for damaged, password-protected or scanned PDFs and for LLM outages (no raw tracebacks).
+- **Thread-safe local model.** One shared in-process model answers one request at a time.
 - **Temperature 0.1 and a strict system prompt.** Factual, repeatable answers, with an explicit "couldn't find that" response.
 - **LLM behind an interface.** Switching provider is a configuration change, and tests use a fake.
 
@@ -177,6 +182,6 @@ data/           runtime PDFs + Chroma DB (git-ignored)
 - [ ] **FastAPI service:** `POST /documents` (upload and index), `POST /ask`, `GET /health`, reusing `RAGService` unchanged
 - [ ] **Docker:** multi-stage image with CPU-only torch and the embedding model baked in for fast cold starts
 - [ ] **Azure deployment:** Azure Container Apps (or App Service for Containers), with secrets in Key Vault surfaced as environment variables, and Chroma on an Azure Files volume
-- [ ] **CI:** GitHub Actions running `ruff` and `pytest` on every pull request
+- [x] **CI/CD:** GitHub Actions runs `ruff` and `pytest` on every push and pull request, then promotes passing `main` commits to `release`, which Streamlit Cloud deploys. Dependabot proposes weekly dependency updates.
 - [ ] Retrieval quality: hybrid BM25 + vector search, a reranker, and an evaluation set of question/answer pairs
 - [ ] OCR fallback for scanned PDFs, and streaming responses in the UI

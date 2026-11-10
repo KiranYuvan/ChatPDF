@@ -7,10 +7,15 @@ Providers:
     auto        - ollama if reachable, else groq if a key is set, else huggingface
 """
 
+import threading
 import urllib.request
 from typing import Protocol
 
 from app.config import Settings
+
+
+class LLMError(RuntimeError):
+    """The language model could not produce an answer (network, rate limit, model failure)."""
 
 
 class LLMClient(Protocol):
@@ -73,10 +78,13 @@ class HuggingFaceLocalClient:
 
         self._pipe = pipeline("text-generation", model=settings.hf_model, device="cpu", dtype="auto")
         self._max_new_tokens = settings.max_new_tokens
+        # One shared model serves every user; generate one answer at a time (like a SemaphoreSlim(1)).
+        self._lock = threading.Lock()
         self.name = f"huggingface:{settings.hf_model}"
 
     def chat(self, system: str, user: str) -> str:
-        out = self._pipe(_messages(system, user), max_new_tokens=self._max_new_tokens, do_sample=False)
+        with self._lock:
+            out = self._pipe(_messages(system, user), max_new_tokens=self._max_new_tokens, do_sample=False)
         return out[0]["generated_text"][-1]["content"].strip()
 
 
