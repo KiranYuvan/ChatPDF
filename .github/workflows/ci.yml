@@ -1,0 +1,41 @@
+# Runs lint + tests on GitHub's servers on every push and pull request (like an Azure DevOps build pipeline).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: # allows a manual "Run workflow" button in the Actions tab
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Cache Hugging Face models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-${{ runner.os }}-${{ hashFiles('app/config.py') }}
+
+      - name: Install dependencies
+        # CPU-only torch index: on Linux the default torch wheel bundles ~3 GB of CUDA libraries.
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt --extra-index-url https://download.pytorch.org/whl/cpu
+          pip install -e .
+
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Test
+        run: pytest
