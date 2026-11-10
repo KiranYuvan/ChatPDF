@@ -131,12 +131,46 @@ python -m scripts.demo path/to/your.pdf
 ### Run tests and lint
 
 ```bash
-pytest                    # 23 tests: config, loader, chunker, vector store, RAG service
+pytest                    # 31 tests: config, loader, chunker, vector store, RAG service, REST API
 pytest -m "not integration"   # fast unit tests only (no embedding model)
 ruff check . && ruff format --check .
 ```
 
 The integration tests use the real embedding model and a temporary Chroma database. `RAGService` tests inject a fake LLM, so they're deterministic and need no model download for generation.
+
+## REST API (FastAPI)
+
+The same `RAGService` is also exposed as a REST API, so other apps (a React front end, a .NET service, Power Automate) can use it.
+
+```bash
+uvicorn api.main:app --reload      # interactive Swagger docs at http://localhost:8000/docs
+```
+
+| Method | Path | Purpose | Responses |
+|---|---|---|---|
+| `GET` | `/health` | Liveness probe (loads no models) | 200 |
+| `POST` | `/documents` | Upload and index a PDF (multipart field `file`) | 201, 400 unreadable PDF, 413 too large |
+| `GET` | `/documents` | List indexed documents | 200 |
+| `DELETE` | `/documents/{name}` | Delete one document | 204, 404 |
+| `POST` | `/ask` | `{"question": "...", "source": "optional.pdf"}` returns the answer plus source chunks | 200, 422 invalid body, 503 LLM unavailable |
+
+Optional headers:
+- `X-Namespace` keeps each tenant's documents separate.
+- `X-API-Key` is required on every endpoint except `/health` when `CHATPDF_API_KEY` is set.
+
+```bash
+curl -F "file=@handbook.pdf" http://localhost:8000/documents
+curl -H "Content-Type: application/json" -d '{"question":"What is the hotel cap?"}' http://localhost:8000/ask
+```
+
+## Docker
+
+```bash
+docker build -t chatpdf-api .
+docker run -p 8000:8000 -e GROQ_API_KEY=$GROQ_API_KEY -v chatpdf-data:/data chatpdf-api
+```
+
+The image is CPU-only, runs as a non-root user, has a built-in `HEALTHCHECK`, and includes the embedding model so containers start without a download. The `chatpdf-data` volume keeps the Chroma index across container restarts. The same image can run the UI instead: append `streamlit run streamlit_app.py --server.port 8501 --server.address 0.0.0.0` and map port 8501.
 
 ## Configuration
 
@@ -171,6 +205,7 @@ Secrets have no defaults, are typed as `SecretStr` (masked in logs), and `.env` 
 ```
 app/            core RAG library (no UI code)
 ui/             Streamlit front end
+api/            FastAPI REST service (same RAGService)
 scripts/        setup check, CLI demo, sample-PDF generator
 tests/          pytest suite (unit + integration)
 docs/           learning guide
@@ -179,9 +214,9 @@ data/           runtime PDFs + Chroma DB (git-ignored)
 
 ## Next steps (Step 8)
 
-- [ ] **FastAPI service:** `POST /documents` (upload and index), `POST /ask`, `GET /health`, reusing `RAGService` unchanged
-- [ ] **Docker:** multi-stage image with CPU-only torch and the embedding model baked in for fast cold starts
+- [x] **FastAPI service:** `/documents`, `/ask`, `/health`, with optional API-key auth and namespaces, reusing `RAGService` unchanged
+- [x] **Docker:** CPU-only image, non-root user, health check, embedding model included; built and smoke-tested in CI
 - [ ] **Azure deployment:** Azure Container Apps (or App Service for Containers), with secrets in Key Vault surfaced as environment variables, and Chroma on an Azure Files volume
-- [x] **CI/CD:** GitHub Actions runs `ruff` and `pytest` on every push and pull request, then promotes passing `main` commits to `release`, which Streamlit Cloud deploys. Dependabot proposes weekly dependency updates.
+- [x] **CI/CD:** GitHub Actions runs `ruff`, `pytest` and a Docker build plus smoke test on every push and pull request, then promotes passing `main` commits to `release`, which Streamlit Cloud deploys. Dependabot proposes weekly dependency updates.
 - [ ] Retrieval quality: hybrid BM25 + vector search, a reranker, and an evaluation set of question/answer pairs
 - [ ] OCR fallback for scanned PDFs, and streaming responses in the UI

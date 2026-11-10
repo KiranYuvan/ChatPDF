@@ -91,9 +91,9 @@ class RAGService:
         pages = load_pdf(data)
         chunks = chunk_pages(pages, source, self.settings.chunk_size, self.settings.chunk_overlap)
         self.store.add_chunks(chunks, namespace)
+        # File names can identify people (e.g. "Jane_Doe_Resume.pdf"), so log only counts.
         logger.info(
-            "Indexed %s: %d pages, %d chunks in %.1fs",
-            source,
+            "Indexed a document: %d pages, %d chunks in %.1fs",
             len(pages),
             len(chunks),
             time.perf_counter() - start,
@@ -130,6 +130,13 @@ class RAGService:
     def documents(self, namespace: str = DEFAULT_NAMESPACE) -> list[str]:
         """Names of the documents indexed in a namespace."""
         return self.store.sources(namespace)
+
+    def delete_document(self, source: str, namespace: str = DEFAULT_NAMESPACE) -> bool:
+        """Delete one document. Returns False if it did not exist."""
+        if source not in self.store.sources(namespace):
+            return False
+        self.store.delete_source(source, namespace)
+        return True
 
     def clear(self, namespace: str) -> None:
         """Delete every document in a namespace."""

@@ -1,0 +1,19 @@
+# Keep the build context small and secret-free (like .gitignore, but for `docker build`).
+.git
+.github
+.devcontainer
+.venv
+.venv-*
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.ruff_cache
+*.egg-info
+coverage
+.env
+.env.*
+data
+docs
+tests
+scripts
+*.pdf
