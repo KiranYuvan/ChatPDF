@@ -49,7 +49,9 @@ flowchart LR
 | Orchestrate | [`app/rag.py`](app/rag.py) | `RAGService.index_pdf()` / `ask()`, with dependencies injected through the constructor |
 | UI | [`ui/streamlit_app.py`](ui/streamlit_app.py) | Upload, index, pick a document, chat, and inspect the source chunks |
 
-The core (`app/`) has no UI or web code, so the Streamlit UI and the planned FastAPI service are thin layers over the same `RAGService`.
+The core (`app/`) has no UI or web code, so the Streamlit UI and the FastAPI service are thin layers over the same `RAGService`.
+
+📘 **[Read the full architecture guide](docs/ARCHITECTURE.md)**: code walkthrough with sequence diagrams, the CI/CD pipeline, Streamlit Cloud, Docker and troubleshooting.
 
 ## Example Q&A
 
@@ -208,7 +210,7 @@ ui/             Streamlit front end
 api/            FastAPI REST service (same RAGService)
 scripts/        setup check, CLI demo, sample-PDF generator
 tests/          pytest suite (unit + integration)
-docs/           learning guide
+docs/           architecture guide + learning guide
 data/           runtime PDFs + Chroma DB (git-ignored)
 ```
 
