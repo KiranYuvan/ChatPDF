@@ -41,6 +41,17 @@ def test_source_filter_limits_results(store: VectorStore) -> None:
     assert {h.source for h in hits} == {"a.pdf"}
 
 
+def test_namespaces_are_isolated(settings: Settings) -> None:
+    vs = VectorStore(settings.chroma_dir, "tenants", Embedder(settings.embedding_model))
+    vs.add_chunks([CHUNKS[0]], namespace="alice")
+    vs.add_chunks([CHUNKS[1]], namespace="bob")  # different doc, same file name "a.pdf"
+
+    assert [h.page for h in vs.search("leave", top_k=5, namespace="alice")] == [1]
+    assert [h.page for h in vs.search("leave", top_k=5, namespace="bob")] == [2]
+    vs.delete_namespace("alice")
+    assert vs.sources("alice") == [] and vs.sources("bob") == ["a.pdf"]
+
+
 def test_reindexing_replaces_instead_of_duplicating(store: VectorStore) -> None:
     store.add_chunks([c for c in CHUNKS if c.source == "a.pdf"])
     hits = store.search("hotel", top_k=10, source="a.pdf")

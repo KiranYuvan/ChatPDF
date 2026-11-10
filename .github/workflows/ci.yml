@@ -7,6 +7,15 @@ on:
   pull_request:
   workflow_dispatch: # allows a manual "Run workflow" button in the Actions tab
 
+# Least privilege by default; the release job asks for write access explicitly.
+permissions:
+  contents: read
+
+# A newer push to the same branch cancels the older, now-irrelevant run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest

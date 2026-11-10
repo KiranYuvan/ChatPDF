@@ -66,6 +66,10 @@ class Settings(BaseSettings):
 
     hf_model: str = "Qwen/Qwen2.5-0.5B-Instruct"  # ~1 GB, runs in-process on CPU
 
+    # --- Operations ------------------------------------------------------------
+    max_upload_mb: int = Field(default=20, gt=0)  # keep in sync with .streamlit/config.toml
+    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
+
     @model_validator(mode="after")
     def _validate(self) -> "Settings":
         """Fail fast at startup (like ValidateOnStart) instead of misbehaving at runtime."""

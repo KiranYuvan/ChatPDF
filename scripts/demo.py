@@ -8,6 +8,7 @@ import time
 from pathlib import Path
 
 from app.config import get_settings
+from app.logging_config import configure_logging
 from app.rag import RAGService
 
 QUESTIONS = [
@@ -24,6 +25,7 @@ def main() -> int:
         print(f"{pdf} not found. Create the sample with:  python -m scripts.make_sample_pdf")
         return 1
 
+    configure_logging("WARNING")  # keep the demo output clean
     service = RAGService()
     start = time.perf_counter()
     result = service.index_pdf(pdf.read_bytes(), pdf.name)
