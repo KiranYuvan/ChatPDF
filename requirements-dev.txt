@@ -1,0 +1,6 @@
+# Dev + test tools (not needed to run the app; not shipped in a Docker image).
+-r requirements.txt
+
+pytest==9.2.0
+ruff==0.14.4
+fpdf2==2.9.0     # builds PDFs for tests and the sample handbook

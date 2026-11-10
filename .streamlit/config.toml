@@ -1,0 +1,9 @@
+# Streamlit reads this from the working directory (run from the project root).
+[server]
+# Only reachable from this machine. Docker/Azure will override with --server.address 0.0.0.0
+address = "localhost"
+port = 8501
+headless = true
+
+[browser]
+gatherUsageStats = false

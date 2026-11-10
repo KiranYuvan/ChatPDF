@@ -1,0 +1,44 @@
+# --- Python ---
+.venv/
+.venv-*/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# --- Tooling caches / reports ---
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage/
+htmlcov/
+
+# --- Secrets: never commit ---
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# --- Runtime data: vector DB files, uploaded / sample PDFs ---
+# (gitignore comments must be on their own line - a trailing "# ..." becomes part of the pattern)
+data/chroma/
+data/pdfs/*
+!data/pdfs/.gitkeep
+*.pdf
+
+# --- Downloaded model files ---
+# (HF models normally cache in ~/.cache/huggingface, outside the repo; this guards against
+#  HF_HOME or a local models/ folder being pointed inside it)
+models/
+.cache/
+*.safetensors
+*.gguf
+*.bin
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
