@@ -1,0 +1,12 @@
+// GitHub Codespaces / VS Code Dev Containers: a ready-to-run cloud workspace for this repo.
+{
+  "name": "ChatPDF",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "hostRequirements": { "cpus": 2, "memory": "8gb" },
+  "postCreateCommand": "pip install -r requirements-dev.txt --extra-index-url https://download.pytorch.org/whl/cpu && pip install -e . && python -m scripts.make_sample_pdf",
+  "forwardPorts": [8501],
+  "portsAttributes": { "8501": { "label": "ChatPDF UI", "onAutoForward": "openBrowser" } },
+  "customizations": {
+    "vscode": { "extensions": ["ms-python.python", "charliermarsh.ruff"] }
+  }
+}

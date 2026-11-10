@@ -3,7 +3,7 @@
 Upload a PDF, ask questions in plain English, and get answers **grounded in the document with page citations**. It uses Retrieval-Augmented Generation (RAG) and runs **100% free**: no OpenAI key and no paid services. Embeddings, the vector database and (optionally) the LLM all run on your own machine.
 
 ![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)
-![Tests](https://img.shields.io/badge/tests-pytest-green)
+[![CI](https://github.com/KiranYuvan/ChatPDF/actions/workflows/ci.yml/badge.svg)](https://github.com/KiranYuvan/ChatPDF/actions/workflows/ci.yml)
 ![Lint](https://img.shields.io/badge/lint-ruff-purple)
 ![Cost](https://img.shields.io/badge/cost-%240-brightgreen)
 
@@ -85,6 +85,12 @@ Selected with `CHATPDF_LLM_PROVIDER`. The default, `auto`, picks the best one av
 | `groq` | Free API key from [console.groq.com](https://console.groq.com/keys), set `GROQ_API_KEY` | Very fast (hosted) | Best | Data sent to Groq |
 | `huggingface` | Nothing; the model downloads on first use (~1 GB) | ~15–30 s per answer | OK for short factual Q&A | Fully offline |
 | `auto` *(default)* | Uses Ollama if it's running, else Groq if a key is set, else Hugging Face | n/a | n/a | n/a |
+
+## Try it without installing anything
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/KiranYuvan/ChatPDF)
+
+Click the badge to open a cloud workspace in your browser. Dependencies install automatically (allow ~5–10 minutes the first time). Then run `streamlit run ui/streamlit_app.py` in its terminal, and port 8501 opens in a new tab. Every push is also linted and tested automatically by [GitHub Actions](https://github.com/KiranYuvan/ChatPDF/actions).
 
 ## Getting started
 
