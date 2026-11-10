@@ -1,8 +1,7 @@
 # Streamlit reads this from the working directory (run from the project root).
+# server.address is deliberately not set so hosted platforms (Streamlit Cloud, Docker) can bind.
+# To restrict a local run to this machine:  streamlit run streamlit_app.py --server.address localhost
 [server]
-# Only reachable from this machine. Docker/Azure will override with --server.address 0.0.0.0
-address = "localhost"
-port = 8501
 headless = true
 
 [browser]

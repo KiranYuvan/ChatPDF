@@ -90,7 +90,7 @@ Selected with `CHATPDF_LLM_PROVIDER`. The default, `auto`, picks the best one av
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/KiranYuvan/ChatPDF)
 
-Click the badge to open a cloud workspace in your browser. Dependencies install automatically (allow ~5–10 minutes the first time). Then run `streamlit run ui/streamlit_app.py` in its terminal, and port 8501 opens in a new tab. Every push is also linted and tested automatically by [GitHub Actions](https://github.com/KiranYuvan/ChatPDF/actions).
+Click the badge to open a cloud workspace in your browser. Dependencies install automatically (allow ~5–10 minutes the first time). Then run `streamlit run streamlit_app.py` in its terminal, and port 8501 opens in a new tab. Every push is also linted and tested automatically by [GitHub Actions](https://github.com/KiranYuvan/ChatPDF/actions).
 
 ## Getting started
 
@@ -113,7 +113,7 @@ python -m scripts.check_setup         # verify environment -> "=== ALL GOOD ==="
 ### Run the app
 
 ```bash
-streamlit run ui/streamlit_app.py     # http://localhost:8501
+streamlit run streamlit_app.py     # http://localhost:8501
 ```
 
 Upload a PDF in the sidebar, click **Index PDF**, and start asking questions. Expand **Sources** under an answer to see which chunks it was grounded on.

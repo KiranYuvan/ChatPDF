@@ -179,7 +179,7 @@ ChatPDF/
 pip install -r requirements-dev.txt; pip install -e .   # once: deps + make `app` importable
 python -m scripts.make_sample_pdf          # creates data/pdfs/sample_handbook.pdf
 python -m scripts.demo                     # CLI: index + 4 sample questions
-streamlit run ui/streamlit_app.py          # UI at http://localhost:8501
+streamlit run streamlit_app.py          # UI at http://localhost:8501
 ```
 | 8 | FastAPI + Docker, deploy to Azure | Later |
 

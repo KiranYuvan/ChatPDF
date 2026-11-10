@@ -1,7 +1,8 @@
 """Streamlit UI: upload a PDF, index it, and chat with it.
 
-Run from the project root (after `pip install -e .`):
-    streamlit run ui/streamlit_app.py
+Run from the project root:
+    streamlit run streamlit_app.py        # root entry point (also used by Streamlit Cloud)
+    streamlit run ui/streamlit_app.py     # works too, after `pip install -e .`
 """
 
 import streamlit as st
@@ -80,4 +81,5 @@ def main() -> None:
         messages.append({"role": "assistant", "content": answer.text})
 
 
-main()
+if __name__ == "__main__":  # `streamlit run` executes the script as __main__
+    main()

@@ -1,6 +1,10 @@
 # Runtime dependencies - pinned for reproducible installs (like exact <PackageReference Version>).
 # Python 3.11 or 3.12. Dev/test tools live in requirements-dev.txt.
 
+# CPU-only torch: on Linux (CI, Streamlit Cloud, Docker) the default torch wheel bundles ~3 GB of
+# CUDA libraries we never use. On Windows/macOS the default wheel is already CPU-only.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 pydantic==2.14.3
 pydantic-settings==2.16.2
 
